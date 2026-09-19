@@ -1,0 +1,187 @@
+<div class="calculator-layout">
+  <!-- Left Column: Form & Results -->
+  <div class="main-column">
+    <!-- Simulation Form Card -->
+    <section class="calculator-card" aria-labelledby="form-title">
+      <div class="card-header">
+        <div class="badge-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+            <line x1="8" y1="6" x2="16" y2="6"></line>
+            <line x1="16" y1="14" x2="16" y2="18"></line>
+            <path d="M16 10h.01"></path>
+            <path d="M12 10h.01"></path>
+            <path d="M8 10h.01"></path>
+            <path d="M12 14h.01"></path>
+            <path d="M8 14h.01"></path>
+            <path d="M12 18h.01"></path>
+            <path d="M8 18h.01"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 id="form-title" class="title">Simulador de Investimento CDB</h2>
+          <p class="subtitle">Informe o valor inicial e o prazo de resgate para calcular a rentabilidade</p>
+        </div>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="calc-form" novalidate>
+        <!-- Field: Initial Amount -->
+        <div class="form-group" [class.has-error]="isFieldInvalid('initialAmount')">
+          <label for="initialAmount" class="form-label">
+            Valor Inicial da Aplicação
+            <span class="required" aria-hidden="true">*</span>
+          </label>
+          <div class="input-wrapper">
+            <input
+              id="initialAmount"
+              type="text"
+              inputmode="numeric"
+              appBrlCurrency
+              [maxAmount]="maxInitialAmount"
+              formControlName="initialAmount"
+              placeholder="R$ 0,00"
+              class="form-control"
+              [attr.aria-invalid]="isFieldInvalid('initialAmount')"
+              [attr.aria-describedby]="isFieldInvalid('initialAmount') ? 'initialAmount-error' : 'initialAmount-help'"
+            />
+          </div>
+          @if (isFieldInvalid('initialAmount')) {
+            <span id="initialAmount-error" class="error-message" role="alert">
+              {{ getFieldError('initialAmount') }}
+            </span>
+          } @else {
+            <small id="initialAmount-help" class="helper-text">Valor positivo até R$ 100.000.000,00 no padrão brasileiro.</small>
+          }
+        </div>
+
+        <!-- Field: Term in Months -->
+        <div class="form-group" [class.has-error]="isFieldInvalid('termInMonths')">
+          <label for="termInMonths" class="form-label">
+            Prazo de Resgate
+            <span class="required" aria-hidden="true">*</span>
+          </label>
+          <div class="input-wrapper">
+            <input
+              id="termInMonths"
+              type="text"
+              inputmode="numeric"
+              maxlength="4"
+              (keydown)="onTermKeyDown($event)"
+              formControlName="termInMonths"
+              placeholder="Ex: 12"
+              class="form-control with-suffix"
+              [attr.aria-invalid]="isFieldInvalid('termInMonths')"
+              [attr.aria-describedby]="isFieldInvalid('termInMonths') ? 'termInMonths-error' : 'termInMonths-help'"
+            />
+            <span class="input-suffix" aria-hidden="true">meses</span>
+          </div>
+          @if (isFieldInvalid('termInMonths')) {
+            <span id="termInMonths-error" class="error-message" role="alert">
+              {{ getFieldError('termInMonths') }}
+            </span>
+          } @else {
+            <small id="termInMonths-help" class="helper-text">Número inteiro entre 2 e 1.200 meses.</small>
+          }
+        </div>
+
+        <!-- General Server Error Banner -->
+        @if (generalError()) {
+          <div class="general-error-banner" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>{{ generalError() }}</span>
+          </div>
+        }
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="form.invalid || isLoading()"
+            id="btn-calcular"
+          >
+            @if (isLoading()) {
+              <span class="spinner" aria-hidden="true"></span>
+              <span>Calculando...</span>
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              <span>Calcular Rendimento</span>
+            }
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="onReset()"
+            [disabled]="isLoading()"
+            id="btn-limpar"
+          >
+            Limpar
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Calculation Results Card -->
+    @if (calculationResult(); as result) {
+      <section class="results-card" aria-labelledby="results-title">
+        <div class="results-header">
+          <div>
+            <span class="badge-tag">Resultado da Simulação</span>
+            <h2 id="results-title" class="results-title">Projeção de Resgate</h2>
+            <p class="results-subtitle">Para {{ submittedTermInMonths() }} meses de aplicação</p>
+          </div>
+        </div>
+
+        <!-- Main Net Highlight -->
+        <div class="net-highlight-box">
+          <div class="net-header">
+            <span class="net-label">Valor Líquido a Receber</span>
+            <span class="net-badge">+{{ netReturnPercentage() | number:'1.2-2' }}% no período</span>
+          </div>
+          <div class="net-value" id="resultado-liquido-valor">
+            {{ result.netAmount | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+          </div>
+          <p class="net-caption">Valor final já livre de Imposto de Renda</p>
+        </div>
+
+        <!-- Financial Breakdown Grid -->
+        <div class="financial-breakdown">
+          <div class="breakdown-item">
+            <span class="item-label">Valor Inicial Aplicado</span>
+            <strong class="item-value">{{ submittedInitialAmount() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+          </div>
+
+          <div class="breakdown-item">
+            <span class="item-label">Rendimento Bruto (Lucro)</span>
+            <strong class="item-value positive">+{{ grossYield() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+          </div>
+
+          <div class="breakdown-item">
+            <span class="item-label">Resultado Bruto Total</span>
+            <strong class="item-value" id="resultado-bruto-valor">{{ result.grossAmount | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+          </div>
+
+          <div class="breakdown-item">
+            <span class="item-label">
+              Imposto de Renda Retido
+              <span class="tax-rate-sub" *ngIf="effectiveTaxRate() > 0">({{ effectiveTaxRate() | number:'1.1-1' }}%)</span>
+            </span>
+            <strong class="item-value negative" id="resultado-imposto-valor">-{{ result.incomeTax | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+          </div>
+        </div>
+      </section>
+    }
+  </div>
+
+  <!-- Right Column: Informational Panel with Variables & Rules -->
+  <aside class="side-column" aria-label="Informações sobre o cálculo de CDB">
+    <app-cdb-info-panel></app-cdb-info-panel>
+  </aside>
+</div>

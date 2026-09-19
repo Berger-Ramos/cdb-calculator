@@ -1,0 +1,108 @@
+<div class="info-container">
+  <!-- Card: Sobre o Produto -->
+  <div class="info-card">
+    <div class="card-header">
+      <div class="icon-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </div>
+      <div>
+        <h3 class="card-title">Sobre a Simulação de CDB</h3>
+        <p class="card-subtitle">Certificado de Depósito Bancário pós-fixado</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="description">
+        O CDB é um título de renda fixa emitido por instituições financeiras para captação de recursos. Nesta simulação, os juros são acumulados mensalmente sobre o saldo do mês anterior (juros compostos), incidindo Imposto de Renda regressivo apenas sobre o lucro obtido.
+      </p>
+    </div>
+  </div>
+
+  <!-- Card: Variáveis do Cálculo -->
+  <div class="info-card">
+    <div class="card-header">
+      <div class="icon-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+      </div>
+      <div>
+        <h3 class="card-title">Variáveis e Parâmetros Utilizados</h3>
+        <p class="card-subtitle">Parâmetros financeiros para a fórmula</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="variables-grid">
+        <div class="variable-item">
+          <span class="var-label">Taxa do Banco (TB)</span>
+          <strong class="var-value">{{ constants.formattedBankRateTb }}</strong>
+          <span class="var-desc">Percentual do CDI pago pelo banco</span>
+        </div>
+        <div class="variable-item">
+          <span class="var-label">CDI Mensal</span>
+          <strong class="var-value">{{ constants.formattedMonthlyCdi }}</strong>
+          <span class="var-desc">Taxa CDI fixada para o período</span>
+        </div>
+        <div class="variable-item highlight">
+          <span class="var-label">Taxa Efetiva Mensal</span>
+          <strong class="var-value">{{ constants.formattedEffectiveMonthlyRate }}</strong>
+          <span class="var-desc">CDI × TB (0,009 × 1,08)</span>
+        </div>
+      </div>
+
+      <div class="formula-box">
+        <span class="formula-title">Fórmula de Juros Compostos:</span>
+        <code>VF = VI × [1 + (CDI × TB)]</code>
+        <small class="formula-note">O valor final de cada mês se torna o valor inicial do mês subsequente.</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card: Tabela Regressiva de IR -->
+  <div class="info-card">
+    <div class="card-header">
+      <div class="icon-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <line x1="2" y1="10" x2="22" y2="10"></line>
+        </svg>
+      </div>
+      <div>
+        <h3 class="card-title">Tabela Regressiva de Imposto de Renda</h3>
+        <p class="card-subtitle">Incidência exclusiva sobre o rendimento (lucro)</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="b-table">
+          <thead>
+            <tr>
+              <th>Prazo de Aplicação</th>
+              <th>Alíquota de IR</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of taxBrackets; track item.bracketId) {
+              <tr>
+                <td>
+                  <span class="deadline-badge">{{ item.termDescription }}</span>
+                </td>
+                <td>
+                  <span class="tax-rate-badge">{{ item.formattedRate }}</span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="tax-disclaimer">
+        * A alíquota diminui conforme o tempo em que o dinheiro permanece aplicado, estimulando investimentos de maior prazo.
+      </p>
+    </div>
+  </div>
+</div>

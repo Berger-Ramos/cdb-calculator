@@ -1,12 +1,15 @@
 <Solution>
+  <Folder Name="/readme/">
+    <File Path="readme.md" />
+  </Folder>
   <Folder Name="/src/">
-    <Project Path="src/CdbCalculator.Domain/CdbCalculator.Domain.csproj" />
-    <Project Path="src/CdbCalculator.Application/CdbCalculator.Application.csproj" />
     <Project Path="src/CdbCalculator.Api/CdbCalculator.Api.csproj" />
+    <Project Path="src/CdbCalculator.Application/CdbCalculator.Application.csproj" />
+    <Project Path="src/CdbCalculator.Domain/CdbCalculator.Domain.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/CdbCalculator.Domain.Tests/CdbCalculator.Domain.Tests.csproj" />
-    <Project Path="tests/CdbCalculator.Application.Tests/CdbCalculator.Application.Tests.csproj" />
     <Project Path="tests/CdbCalculator.Api.Tests/CdbCalculator.Api.Tests.csproj" />
+    <Project Path="tests/CdbCalculator.Application.Tests/CdbCalculator.Application.Tests.csproj" />
+    <Project Path="tests/CdbCalculator.Domain.Tests/CdbCalculator.Domain.Tests.csproj" />
   </Folder>
 </Solution>

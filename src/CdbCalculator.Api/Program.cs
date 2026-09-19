@@ -22,7 +22,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "CDB Calculator API"));
 }
 
-app.UseHttpsRedirection();
 app.UseCors("AngularDevelopment");
 app.MapControllers();
 

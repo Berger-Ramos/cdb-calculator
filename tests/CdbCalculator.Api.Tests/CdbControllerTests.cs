@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using CdbCalculator.Api.Contracts;
 using CdbCalculator.Api.Controllers;
@@ -42,6 +43,36 @@ public sealed class CdbControllerTests
         Assert.True(document.RootElement.TryGetProperty("grossAmount", out _));
         Assert.True(document.RootElement.TryGetProperty("incomeTax", out _));
         Assert.True(document.RootElement.TryGetProperty("netAmount", out _));
+    }
+
+    [Fact]
+    public void CalculateCdbRequestValidatesAllConstraints()
+    {
+        var context = new ValidationContext(new ApiRequest());
+
+        // Valid
+        var validRequest = new ApiRequest { InitialAmount = 1000m, TermInMonths = 12 };
+        Assert.Empty(validRequest.Validate(context));
+
+        // InitialAmount <= 0
+        var zeroAmount = new ApiRequest { InitialAmount = 0m, TermInMonths = 12 };
+        Assert.Contains(zeroAmount.Validate(context), r => r.MemberNames.Contains("InitialAmount"));
+
+        // InitialAmount > 100M
+        var maxAmount = new ApiRequest { InitialAmount = 100_000_000.01m, TermInMonths = 12 };
+        Assert.Contains(maxAmount.Validate(context), r => r.MemberNames.Contains("InitialAmount"));
+
+        // InitialAmount with 3 decimals
+        var decimalAmount = new ApiRequest { InitialAmount = 1000.123m, TermInMonths = 12 };
+        Assert.Contains(decimalAmount.Validate(context), r => r.MemberNames.Contains("InitialAmount"));
+
+        // Term <= 1
+        var minTerm = new ApiRequest { InitialAmount = 1000m, TermInMonths = 1 };
+        Assert.Contains(minTerm.Validate(context), r => r.MemberNames.Contains("TermInMonths"));
+
+        // Term > 1200
+        var maxTerm = new ApiRequest { InitialAmount = 1000m, TermInMonths = 1201 };
+        Assert.Contains(maxTerm.Validate(context), r => r.MemberNames.Contains("TermInMonths"));
     }
 
     private sealed class StubCalculateCdbUseCase(ApplicationResponse response) : ICalculateCdbUseCase
