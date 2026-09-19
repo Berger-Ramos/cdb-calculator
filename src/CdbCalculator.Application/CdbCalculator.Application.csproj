@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\CdbCalculator.Domain\CdbCalculator.Domain.csproj" />
+  </ItemGroup>
+</Project>
