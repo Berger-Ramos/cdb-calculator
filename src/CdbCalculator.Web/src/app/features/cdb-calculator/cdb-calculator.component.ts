@@ -28,7 +28,7 @@ export class CdbCalculatorComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   public readonly maxInitialAmount = 100_000_000.00;
-  public readonly maxTermInMonths = 1200;
+  public readonly maxTermInMonths = 360;
 
   // Local reactive state managed with Angular Signals
   public readonly isLoading = signal<boolean>(false);
@@ -102,7 +102,7 @@ export class CdbCalculatorComponent {
 
   public getFieldError(fieldName: string): string | null {
     const control = this.form.get(fieldName);
-    if (!control || !control.errors || !(control.dirty || control.touched)) {
+    if (!control?.errors || !(control.dirty || control.touched)) {
       return null;
     }
 
@@ -125,7 +125,7 @@ export class CdbCalculatorComponent {
     if (control.hasError('max')) {
       return fieldName === 'initialAmount'
         ? `O valor inicial não pode ultrapassar ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(this.maxInitialAmount)}.`
-        : `O prazo de resgate não pode ultrapassar ${this.maxTermInMonths} meses (100 anos).`;
+        : `O prazo de resgate não pode ultrapassar ${this.maxTermInMonths.toLocaleString('pt-BR')} meses.`;
     }
 
     if (control.hasError('pattern')) {
@@ -155,13 +155,13 @@ export class CdbCalculatorComponent {
     }
 
     // Allow only digits 0-9
-    if (!/^[0-9]$/.test(event.key)) {
+    if (!/^\d$/.test(event.key)) {
       event.preventDefault();
       return;
     }
 
     const currentVal = String(this.form.get('termInMonths')?.value || '');
-    if (currentVal.length >= 4 && !window.getSelection()?.toString()) {
+    if (currentVal.length >= 3 && !window.getSelection()?.toString()) {
       event.preventDefault();
     }
   }

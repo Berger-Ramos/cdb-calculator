@@ -16,9 +16,9 @@ describe('CdbCalculatorComponent', () => {
   let mockCdbService: { calculate: ReturnType<typeof vi.fn> };
 
   const successResponse: CalculateCdbResponse = {
-    grossAmount: 1123.18,
-    incomeTax: 24.64,
-    netAmount: 1098.54
+    grossAmount: 1123.08,
+    incomeTax: 24.62,
+    netAmount: 1098.47
   };
 
   beforeEach(async () => {
@@ -86,15 +86,15 @@ describe('CdbCalculatorComponent', () => {
     expect(termControl?.valid).toBe(true);
   });
 
-  it('should invalidate termInMonths exceeding maximum limit of 1200 months', () => {
+  it('should invalidate termInMonths exceeding the 360-month business limit', () => {
     const termControl = component.form.get('termInMonths');
 
-    termControl?.setValue(1201);
+    termControl?.setValue(361);
     expect(termControl?.valid).toBe(false);
     expect(termControl?.hasError('max')).toBe(true);
     termControl?.markAsTouched();
 
-    expect(component.getFieldError('termInMonths')).toContain('1200 meses');
+    expect(component.getFieldError('termInMonths')).toContain('360 meses');
   });
 
   it('should invalidate non-integer patterns for termInMonths', () => {
@@ -130,14 +130,14 @@ describe('CdbCalculatorComponent', () => {
 
     expect(mockCdbService.calculate).toHaveBeenCalledWith({ initialAmount: 1000, termInMonths: 12 });
     expect(component.calculationResult()).toEqual(successResponse);
-    expect(component.grossYield()).toBeCloseTo(123.18, 2);
-    expect(component.netYield()).toBeCloseTo(98.54, 2);
+    expect(component.grossYield()).toBeCloseTo(123.08, 2);
+    expect(component.netYield()).toBeCloseTo(98.47, 2);
     expect(component.effectiveTaxRate()).toBeCloseTo(20.0, 1);
     expect(component.isLoading()).toBe(false);
 
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('#resultado-liquido-valor')?.textContent).toContain('1.098,54');
-    expect(compiled.querySelector('#resultado-bruto-valor')?.textContent).toContain('1.123,18');
+    expect(compiled.querySelector('#resultado-liquido-valor')?.textContent).toContain('1.098,47');
+    expect(compiled.querySelector('#resultado-bruto-valor')?.textContent).toContain('1.123,08');
   });
 
   it('should map ProblemDetails 400 validation errors to form controls', () => {
@@ -240,7 +240,7 @@ describe('CdbCalculatorComponent', () => {
     expect(component.calculationResult()).toBeNull();
   });
 
-  it('should handle onTermKeyDown blocking non-digit characters and limiting length to 4', () => {
+  it('should handle onTermKeyDown blocking non-digit characters and limiting length to 3', () => {
     const letterEvent = new KeyboardEvent('keydown', { key: 'e', cancelable: true });
     component.onTermKeyDown(letterEvent);
     expect(letterEvent.defaultPrevented).toBe(true);
@@ -253,10 +253,9 @@ describe('CdbCalculatorComponent', () => {
     component.onTermKeyDown(digitEvent);
     expect(digitEvent.defaultPrevented).toBe(false);
 
-    // Test length >= 4 blocking
-    component.form.get('termInMonths')?.setValue('1200');
-    const fifthDigitEvent = new KeyboardEvent('keydown', { key: '0', cancelable: true });
-    component.onTermKeyDown(fifthDigitEvent);
-    expect(fifthDigitEvent.defaultPrevented).toBe(true);
+    component.form.get('termInMonths')?.setValue('360');
+    const fourthDigitEvent = new KeyboardEvent('keydown', { key: '0', cancelable: true });
+    component.onTermKeyDown(fourthDigitEvent);
+    expect(fourthDigitEvent.defaultPrevented).toBe(true);
   });
 });

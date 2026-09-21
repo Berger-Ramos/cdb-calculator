@@ -76,13 +76,14 @@ public sealed class CdbCalculatorTests
     [Fact]
     public void CalculateWithMaximumValidTermUsesLowestTaxRate()
     {
-        var investment = new CdbInvestment(1000m, 1200);
+        var investment = new CdbInvestment(100_000_000m, CdbInvestment.MaximumTermInMonths);
         var calculator = CreateCalculator();
 
         var result = calculator.Calculate(investment);
 
         Assert.Equal(0.15m, result.IncomeTaxRate);
         Assert.True(result.GrossAmount > investment.InitialAmount);
+        Assert.True(result.NetAmount > 0);
     }
 
     [Fact]

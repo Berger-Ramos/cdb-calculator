@@ -7,6 +7,62 @@
     <Project Path="src/CdbCalculator.Application/CdbCalculator.Application.csproj" />
     <Project Path="src/CdbCalculator.Domain/CdbCalculator.Domain.csproj" />
   </Folder>
+  <Folder Name="/src/CdbCalculator.Web/">
+    <File Path="src/CdbCalculator.Web/angular.json" />
+    <File Path="src/CdbCalculator.Web/package.json" />
+    <File Path="src/CdbCalculator.Web/package-lock.json" />
+    <File Path="src/CdbCalculator.Web/proxy.conf.json" />
+    <File Path="src/CdbCalculator.Web/tsconfig.app.json" />
+    <File Path="src/CdbCalculator.Web/tsconfig.json" />
+    <File Path="src/CdbCalculator.Web/tsconfig.spec.json" />
+  </Folder>
+  <Folder Name="/src/CdbCalculator.Web/public/">
+    <File Path="src/CdbCalculator.Web/public/favicon.ico" />
+  </Folder>
+  <Folder Name="/src/CdbCalculator.Web/src/">
+    <File Path="src/CdbCalculator.Web/src/index.html" />
+    <File Path="src/CdbCalculator.Web/src/main.ts" />
+    <File Path="src/CdbCalculator.Web/src/styles.scss" />
+  </Folder>
+  <Folder Name="/src/CdbCalculator.Web/src/app/">
+    <File Path="src/CdbCalculator.Web/src/app/app.config.ts" />
+    <File Path="src/CdbCalculator.Web/src/app/app.html" />
+    <File Path="src/CdbCalculator.Web/src/app/app.routes.ts" />
+    <File Path="src/CdbCalculator.Web/src/app/app.scss" />
+    <File Path="src/CdbCalculator.Web/src/app/app.spec.ts" />
+    <File Path="src/CdbCalculator.Web/src/app/app.ts" />
+  </Folder>
+  <Folder Name="/src/CdbCalculator.Web/src/app/core/" />
+  <Folder Name="/src/CdbCalculator.Web/src/app/core/api/">
+    <File Path="src/CdbCalculator.Web/src/app/core/api/api-config.spec.ts" />
+    <File Path="src/CdbCalculator.Web/src/app/core/api/api-config.ts" />
+    <File Path="src/CdbCalculator.Web/src/app/core/api/problem-details.model.ts" />
+  </Folder>
+  <Folder Name="/src/CdbCalculator.Web/src/app/features/" />
+  <Folder Name="/src/CdbCalculator.Web/src/app/features/cdb-calculator/">
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/cdb-calculator.component.html" />
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/cdb-calculator.component.scss" />
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/cdb-calculator.component.spec.ts" />
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/cdb-calculator.component.ts" />
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/cdb-calculator.service.spec.ts" />
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/cdb-calculator.service.ts" />
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/cdb.models.ts" />
+  </Folder>
+  <Folder Name="/src/CdbCalculator.Web/src/app/features/cdb-calculator/components/" />
+  <Folder Name="/src/CdbCalculator.Web/src/app/features/cdb-calculator/components/cdb-info-panel/">
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/components/cdb-info-panel/cdb-info-panel.component.html" />
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/components/cdb-info-panel/cdb-info-panel.component.scss" />
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/components/cdb-info-panel/cdb-info-panel.component.spec.ts" />
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/components/cdb-info-panel/cdb-info-panel.component.ts" />
+  </Folder>
+  <Folder Name="/src/CdbCalculator.Web/src/app/features/cdb-calculator/directives/">
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/directives/brl-currency.directive.spec.ts" />
+    <File Path="src/CdbCalculator.Web/src/app/features/cdb-calculator/directives/brl-currency.directive.ts" />
+  </Folder>
+  <Folder Name="/src/CdbCalculator.Web/src/environments/">
+    <File Path="src/CdbCalculator.Web/src/environments/environment.development.ts" />
+    <File Path="src/CdbCalculator.Web/src/environments/environment.ts" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/CdbCalculator.Api.Tests/CdbCalculator.Api.Tests.csproj" />
     <Project Path="tests/CdbCalculator.Application.Tests/CdbCalculator.Application.Tests.csproj" />

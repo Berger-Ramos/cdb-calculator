@@ -30,7 +30,7 @@ Angular 22 (Web UI) ── POST /api/cdb/calculate ──► ASP.NET Core API (.
 - **Clean Architecture** com desacoplamento total do domínio: `CdbCalculator.Domain`, `CdbCalculator.Application` e `CdbCalculator.Api`;
 - **OpenAPI & Swagger UI** configurados para o ambiente de desenvolvimento;
 - **RFC 7807 (Problem Details)** para tratamento padronizado de erros de validação (HTTP 400);
-- **xUnit** e **Coverlet** para testes unitários com cobertura > 90%;
+- **xUnit** e **Coverlet** para testes unitários e coleta de cobertura;
 - **CORS** configurado para a origem `http://localhost:4200`.
 
 ### Front-end (Angular 22)
@@ -39,7 +39,7 @@ Angular 22 (Web UI) ── POST /api/cdb/calculate ──► ASP.NET Core API (.
 - **Angular Signals** (`signal`, `computed`) para gerenciamento do estado reativo local;
 - **Identidade visual corporativa e moderna**: paleta em azul marinho (`#0B1E42`), azul elétrico (`#0055FF`) e branco/cinza institucional (`#F4F7FB`);
 - **Painel explicativo didático** exibindo as variáveis utilizadas no cálculo (`CDI = 0,90% a.m.`, `TB = 108%`, `Taxa Efetiva = 0,972% a.m.`) e tabela de IR;
-- **Vitest** com `@vitest/coverage-v8` para testes unitários rápidos e cobertura > 95%;
+- **Vitest** com `@vitest/coverage-v8` para testes unitários rápidos e geração de relatórios de cobertura;
 - **Convenção de código**: 100% dos identificadores em inglês com interface para o usuário em Português (`pt-BR`).
 
 ---
@@ -61,7 +61,7 @@ src/
             components/
               cdb-info-panel/  # Painel de variáveis e tabela regressiva de IR
             directives/
-              brl-currency/    # Diretiva de máscara monetária BRL
+              brl-currency.directive.ts # Diretiva de máscara monetária BRL
 tests/
   CdbCalculator.Domain.Tests/
   CdbCalculator.Application.Tests/
@@ -73,7 +73,7 @@ tests/
 ## ⚙️ Pré-requisitos
 
 - [.NET SDK 10.0](https://dotnet.microsoft.com/download/dotnet/10.0) ou superior;
-- [Node.js](https://nodejs.org/) v20+ ou v24+ e npm v11+;
+- [Node.js](https://nodejs.org/) `22.22.3+`, `24.15+` ou superior compatível com Angular 22, e npm v11+;
 - Navegador moderno (Google Chrome, Microsoft Edge, Firefox).
 
 ---
@@ -105,8 +105,8 @@ Abra outro terminal e navegue até a pasta web:
 ```powershell
 cd src/CdbCalculator.Web
 
-# Instalar dependências (se necessário)
-npm install
+# Instalar dependências a partir do package-lock.json
+npm ci
 
 # Iniciar o servidor de desenvolvimento
 npm start
@@ -135,15 +135,15 @@ Calcula o rendimento bruto, imposto de renda retido e resultado líquido da apli
 | Campo | Tipo | Regra de Validação |
 |---|---|---|
 | `initialAmount` | decimal | Obrigatório, maior que zero ($> 0$), até R$ 100.000.000,00 e máximo 2 casas decimais. |
-| `termInMonths` | inteiro | Obrigatório, maior que um mês ($> 1$) e até 1.200 meses. |
+| `termInMonths` | inteiro | Obrigatório, maior que um mês ($> 1$) e até 360 meses (30 anos). |
 
 #### Resposta de Sucesso — `200 OK`:
 
 ```json
 {
-  "grossAmount": 1123.18,
-  "incomeTax": 24.64,
-  "netAmount": 1098.54
+  "grossAmount": 1123.08,
+  "incomeTax": 24.62,
+  "netAmount": 1098.47
 }
 ```
 
@@ -214,9 +214,32 @@ As taxas e alíquotas ficam parametrizadas em `src/CdbCalculator.Api/appsettings
 # Executar todos os testes
 dotnet test CdbCalculator.slnx --no-restore
 
-# Executar com coleta de cobertura de código
-dotnet test CdbCalculator.slnx --no-restore --collect:"XPlat Code Coverage"
+# Gerar a cobertura da camada lógica (Domain e Application)
+dotnet test CdbCalculator.slnx --no-restore `
+  --settings coverage.runsettings `
+  --collect:"XPlat Code Coverage" `
+  --results-directory ./TestResults/logica
 ```
+
+O Coverlet gera um arquivo `coverage.cobertura.xml` dentro de `TestResults/logica/` para cada execução. O arquivo `coverage.runsettings` limita a métrica à camada lógica: `CdbCalculator.Domain` e `CdbCalculator.Application`.
+
+#### Relatório visual opcional (ReportGenerator)
+
+```powershell
+# Instalar uma única vez
+dotnet tool install --global dotnet-reportgenerator-globaltool
+
+# Gerar o relatório HTML a partir dos arquivos Cobertura
+reportgenerator `
+  -reports:"TestResults/logica/**/coverage.cobertura.xml" `
+  -targetdir:"coverage-report" `
+  -reporttypes:"Html"
+
+# Abrir o relatório no navegador
+Start-Process .\coverage-report\index.html
+```
+
+Os diretórios `TestResults/` e `coverage-report/`, assim como os XMLs de cobertura, são ignorados pelo Git.
 
 ### Testes do Front-end (Angular / Vitest)
 
@@ -230,10 +253,22 @@ npm test -- --watch=false
 npm test -- --coverage --watch=false
 ```
 
+O resumo de cobertura é exibido no terminal e o relatório é gerado pelo Vitest no diretório configurado para cobertura.
+
 ---
 
 ## 🛡️ Qualidade de Código e Análise Estática
 
 - `TreatWarningsAsErrors` habilitado em todos os projetos .NET;
-- Cobertura de testes unitários superior a **90% no backend** e **95% no front-end**;
-- Código preparado e compatível com as regras do **SonarLint** e **SonarQube**.
+- A camada lógica (`CdbCalculator.Domain` e `CdbCalculator.Application`) possui cobertura de linhas superior a **90%**;
+- Os comandos de teste acima permitem gerar e consultar os relatórios de cobertura do backend e do front-end.
+
+---
+
+## 🧰 Solução de Problemas
+
+| Situação | Verificação e solução |
+|---|---|
+| API indisponível | Inicie a API e confirme que ela responde em `http://localhost:58678`. A porta HTTP está definida em `src/CdbCalculator.Api/Properties/launchSettings.json`. |
+| Front-end indisponível | Na pasta `src/CdbCalculator.Web`, execute `npm start` e acesse `http://localhost:4200`. |
+| Porta em uso | Finalize o processo que está usando a porta ou altere a porta no `launchSettings.json`. Se a porta da API mudar, atualize também a configuração de desenvolvimento do Angular para apontar para a nova URL. |

@@ -25,4 +25,4 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AngularDevelopment");
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

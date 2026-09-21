@@ -35,9 +35,9 @@ describe('CdbCalculatorService', () => {
   it('should send POST request and map response correctly on success', () => {
     const input: CalculateCdbInput = { initialAmount: 1000, termInMonths: 12 };
     const mockApiResponse: ApiCdbResponse = {
-      grossAmount: 1123.18,
-      incomeTax: 24.64,
-      netAmount: 1098.54
+      grossAmount: 1123.08,
+      incomeTax: 24.62,
+      netAmount: 1098.47
     };
 
     let actualResponse: CalculateCdbResponse | undefined;
@@ -54,9 +54,9 @@ describe('CdbCalculatorService', () => {
     req.flush(mockApiResponse);
 
     expect(actualResponse).toEqual({
-      grossAmount: 1123.18,
-      incomeTax: 24.64,
-      netAmount: 1098.54
+      grossAmount: 1123.08,
+      incomeTax: 24.62,
+      netAmount: 1098.47
     });
   });
 

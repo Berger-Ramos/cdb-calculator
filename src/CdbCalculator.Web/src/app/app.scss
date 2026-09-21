@@ -57,7 +57,7 @@
 
       .brand-subtitle {
         font-size: 0.8rem;
-        color: #94a3b8;
+        color: #ffffff; // maior contraste
         font-weight: 500;
       }
     }
@@ -67,13 +67,13 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: #283950;
+    border: 1px solid rgba(255, 255, 255, 0.22);
     padding: 0.4rem 0.85rem;
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 600;
-    color: #e2e8f0;
+    color: #ffffff; // texto em branco para garantir contraste
 
     .status-indicator {
       width: 8px;
@@ -99,7 +99,7 @@
 .app-footer {
   background: #081329;
   border-top: 1px solid #1e293b;
-  color: #94a3b8;
+  color: #e6eef8; // mantido/garantido contraste
   padding: 1.5rem 0;
   font-size: 0.825rem;
 
@@ -115,14 +115,14 @@
 
     .footer-copy {
       margin: 0;
-      color: #cbd5e1;
+      color: #e6eef8;
       font-weight: 600;
     }
 
     .footer-disclaimer {
       margin: 0;
       font-size: 0.75rem;
-      color: #64748b;
+      color: #e6eef8; // aumentado para atender contraste
     }
   }
 }

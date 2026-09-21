@@ -3,7 +3,8 @@ namespace CdbCalculator.Domain.Entities;
 public sealed class CdbInvestment
 {
     public const decimal MaximumInitialAmount = 100_000_000.00m;
-    public const int MaximumTermInMonths = 1200;
+
+    public const int MaximumTermInMonths = 360;
 
     public CdbInvestment(decimal initialAmount, int termInMonths)
     {

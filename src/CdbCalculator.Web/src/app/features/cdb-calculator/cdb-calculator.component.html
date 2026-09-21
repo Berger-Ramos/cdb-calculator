@@ -65,7 +65,7 @@
               id="termInMonths"
               type="text"
               inputmode="numeric"
-              maxlength="4"
+              maxlength="3"
               (keydown)="onTermKeyDown($event)"
               formControlName="termInMonths"
               placeholder="Ex: 12"
@@ -80,7 +80,7 @@
               {{ getFieldError('termInMonths') }}
             </span>
           } @else {
-            <small id="termInMonths-help" class="helper-text">Número inteiro entre 2 e 1.200 meses.</small>
+            <small id="termInMonths-help" class="helper-text">Número inteiro entre 2 e 360 meses.</small>
           }
         </div>
 

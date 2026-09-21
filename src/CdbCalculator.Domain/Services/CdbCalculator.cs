@@ -18,7 +18,7 @@ public sealed class CdbCalculator(
 
         for (var month = 0; month < investment.TermInMonths; month++)
         {
-            grossAmount = grossAmount * (1 + monthlyRate);
+            grossAmount *= (1 + monthlyRate);
         }
 
         var earnings = grossAmount - investment.InitialAmount;

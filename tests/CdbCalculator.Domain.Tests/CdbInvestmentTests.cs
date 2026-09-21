@@ -24,6 +24,14 @@ public sealed class CdbInvestmentTests
         Assert.Equal(0.225m, result.IncomeTaxRate);
     }
 
+    [Fact]
+    public void CalculateRejectsNullInvestment()
+    {
+        var calculator = CreateCalculator();
+
+        Assert.Throws<ArgumentNullException>(() => calculator.Calculate(null!));
+    }
+
     [Theory]
     [InlineData(2, 0.225)]
     [InlineData(6, 0.225)]
@@ -38,6 +46,17 @@ public sealed class CdbInvestmentTests
         var rate = CreateTaxRatePolicy().GetFor(termInMonths);
 
         Assert.Equal(expectedRate, rate);
+    }
+
+    [Fact]
+    public void GetForThrowsWhenNoConfiguredTaxBracketApplies()
+    {
+        var policy = new IncomeTaxRatePolicy(
+        [
+            new IncomeTaxRateBracket(6, 0.225m)
+        ]);
+
+        Assert.Throws<InvalidOperationException>(() => policy.GetFor(7));
     }
 
     [Theory]
@@ -72,16 +91,16 @@ public sealed class CdbInvestmentTests
     [Fact]
     public void ConstructorRejectsTermExceedingMaximumLimit()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => new CdbInvestment(100m, 1201));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new CdbInvestment(100m, 361));
     }
 
     [Fact]
     public void ConstructorAcceptsValidMaximumBoundaries()
     {
-        var investment = new CdbInvestment(100_000_000.00m, 1200);
+        var investment = new CdbInvestment(100_000_000.00m, 360);
 
         Assert.Equal(100_000_000.00m, investment.InitialAmount);
-        Assert.Equal(1200, investment.TermInMonths);
+        Assert.Equal(360, investment.TermInMonths);
     }
 
     private static DomainCdbCalculator CreateCalculator() => new(0.009m, 1.08m, CreateTaxRatePolicy());

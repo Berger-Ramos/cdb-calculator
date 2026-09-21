@@ -27,7 +27,7 @@ describe('CdbInfoPanelComponent', () => {
   });
 
   it('should define all 4 regressive tax brackets', () => {
-    expect(component.taxBrackets.length).toBe(4);
+    expect(component.taxBrackets).toHaveLength(4);
     expect(component.taxBrackets[0].formattedRate).toBe('22,5%');
     expect(component.taxBrackets[1].formattedRate).toBe('20,0%');
     expect(component.taxBrackets[2].formattedRate).toBe('17,5%');
@@ -37,7 +37,7 @@ describe('CdbInfoPanelComponent', () => {
   it('should render table rows and constants in template', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const tableRows = compiled.querySelectorAll('.b-table tbody tr');
-    expect(tableRows.length).toBe(4);
+    expect(tableRows).toHaveLength(4);
     expect(compiled.textContent).toContain('108%');
     expect(compiled.textContent).toContain('0,90%');
   });

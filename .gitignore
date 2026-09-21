@@ -484,3 +484,11 @@ $RECYCLE.BIN/
 # Local SDK & NuGet cache
 .sdk-home/
 
+# Angular cache and generated coverage report
+.angular/
+coverage-report/
+
+# Generated test and coverage artifacts
+TestResults/
+**/coverage.cobertura.xml
+

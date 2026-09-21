@@ -70,8 +70,8 @@ public sealed class CdbControllerTests
         var minTerm = new ApiRequest { InitialAmount = 1000m, TermInMonths = 1 };
         Assert.Contains(minTerm.Validate(context), r => r.MemberNames.Contains("TermInMonths"));
 
-        // Term > 1200
-        var maxTerm = new ApiRequest { InitialAmount = 1000m, TermInMonths = 1201 };
+        // Term above the 30-year business horizon.
+        var maxTerm = new ApiRequest { InitialAmount = 1000m, TermInMonths = 361 };
         Assert.Contains(maxTerm.Validate(context), r => r.MemberNames.Contains("TermInMonths"));
     }
 
