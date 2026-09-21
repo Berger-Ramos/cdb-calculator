@@ -2,7 +2,8 @@
   <Folder Name="/readme/">
     <File Path="readme.md" />
   </Folder>
-  <Folder Name="/src/">
+  <Folder Name="/src/" />
+  <Folder Name="/src/CdbCalculator.Api/">
     <Project Path="src/CdbCalculator.Api/CdbCalculator.Api.csproj" />
     <Project Path="src/CdbCalculator.Application/CdbCalculator.Application.csproj" />
     <Project Path="src/CdbCalculator.Domain/CdbCalculator.Domain.csproj" />
